@@ -21,6 +21,24 @@ services:
     deploy:
       mode: global
       endpoint_mode: ${ENDPOINT_MODE}
+      restart_policy:
+        condition: on_failure
+
+  konga:
+    image: pantsel/konga:latest
+    depends_on:
+      - kong
+    ports:
+      - "1337:1337"
+    environment:
+      DB_ADAPTER: ${KONGA_DB_ADAPTER}
+      DB_HOST: ${KONGA_DB_HOST}
+      DB_PORT: ${KONGA_DB_PORT}
+      DB_USER: ${KONGA_DB_USER}
+      DB_PASSWORD: ${KONGA_DB_PASSWORD}
+      DB_DATABASE: ${KONGA_DB_DATABASE}
+      NODE_ENV: ${KONGA_NODE_ENV}
+    network_mode: host
 
   kong-migration:
     image: kong:latest
