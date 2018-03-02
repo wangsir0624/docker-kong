@@ -1,9 +1,7 @@
-version: "3"
+version: "3.3"
 
 services:
   kong:
-    depends_on:
-      - kong-migration
     image: kong:latest
     ports:
       - "8000:8000"
@@ -20,6 +18,9 @@ services:
       KONG_ADMIN_ERROR_LOG: /dev/stderr
       KONG_ADMIN_LISTEN: 0.0.0.0:8001
       KONG_ADMIN_LISTEN_SSL: 0.0.0.0:8444
+    deploy:
+      mode: global
+      endpoint_mode: ${ENDPOINT_MODE}
 
   kong-migration:
     image: kong:latest
