@@ -1,0 +1,12 @@
+version: "3"
+
+services:
+  kong-database:
+    image: cassandra:3
+    ports:
+      - "9042:9042"
+    volumes:
+      - kong-database-data:/var/lib/cassandra
+
+volumes:
+  kong-database-data:

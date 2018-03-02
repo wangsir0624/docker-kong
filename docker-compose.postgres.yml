@@ -1,0 +1,15 @@
+version: "3"
+
+services:
+  kong-database:
+    image: postgres:9.5
+    ports:
+      - "5432:5432"
+    volumes:
+      - kong-database-data:/var/lib/postgresql/data
+    environment:
+      POSTGRES_USER: kong
+      POSTGRES_DB: kong
+
+volumes:
+  kong-database-data:
