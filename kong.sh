@@ -8,9 +8,18 @@ servicename=${basepath##*/}
 
 printHelp() {
     cat <<EOF
-this
-is
-help
+
+Usage: kong.sh COMMAND DATASOURCE
+
+Commands:
+  start  start or update the service
+  stop   stop the service
+
+Data sources:
+  postgres   use the postgres container as the data source
+  cassandra  use the cassandra container as the data source
+  external   use external database service instead of docker container
+
 EOF
 }
 
@@ -27,15 +36,6 @@ if [ "$1" == 'start' ]
 then
     while true
     do
-        `curl -s http://127.0.0.1:8000 > /dev/null`
-        kongStatus=$?
-        `curl -s http://127.0.0.1:1337 > /dev/null`
-        kongaStatus=$?
-        if [ "${kongStatus}" == "0" -a "${kongaStatus}" == "0" ]
-        then
-            break
-        fi
-
         case $2 in
             postgres)
             `docker-compose -f docker-compose.yml -f docker-compose.postgres.yml up -d ${@:3}`
@@ -47,6 +47,17 @@ then
             `docker-compose -f docker-compose.yml up -d ${@:3}`
             ;;
         esac
+
+        `curl -s http://127.0.0.1:8000 > /dev/null`
+        kongStatus=$?
+        `curl -s http://127.0.0.1:1337 > /dev/null`
+        kongaStatus=$?
+        if [ "${kongStatus}" == "0" -a "${kongaStatus}" == "0" ]
+        then
+            break
+        fi
+
+        sleep 3
     done
 elif [ "$1" == 'stop' ]
 then
